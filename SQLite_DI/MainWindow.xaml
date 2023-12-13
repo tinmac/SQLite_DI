@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Window
+    x:Class="SQLite_DI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:SQLite_DI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid
+        x:Name="Grid_Main"
+        Margin="20"
+        Loaded="Grid_Main_Loaded">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+
+            <Button
+                x:Name="Btn_Seed"
+                Margin="0"
+                Click="SeedDb_Click"
+                Content="Seed &amp; Load Db" />
+
+            <TextBlock Margin="20 4 0 0" Text="{x:Bind ViewModel.PersonCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </StackPanel>
+
+        <ListView
+            Grid.Row="1"
+            Margin="0 30 0 0"
+            ItemsSource="{x:Bind ViewModel.PeopleOC, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.HorizontalScrollMode="Auto">
+
+            <!--<ListView.ItemContainerStyle>
+                <Style BasedOn="{StaticResource DefaultListViewItemStyle}" TargetType="ListViewItem">
+                    <Setter Property="cus_ctrls:LVI_BindingHelper.IsEnabled" Value="IsSelectable" />
+                </Style>
+            </ListView.ItemContainerStyle>-->
+
+            <!--<ListView.ItemContainerStyle>
+                                <Style BasedOn="{StaticResource MyListViewItemRevealStyle_1}" TargetType="ListViewItem">
+                                    <Setter Property="cus_ctrls:LVI_BindingHelper.IsEnabled" Value="IsSelectable" />
+                                </Style>
+                            </ListView.ItemContainerStyle>-->
+
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+
+                    <Grid>
+                        <StackPanel Orientation="Horizontal">
+
+                            <TextBlock
+                                MinWidth="100"
+                                Margin="0"
+                                Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <TextBlock
+                                MinWidth="100"
+                                Margin="10 0 0 0"
+                                Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <TextBlock
+                                MinWidth="40"
+                                Margin="10 0 0 0"
+                                Text="{Binding Age, UpdateSourceTrigger=PropertyChanged}" />
+
+                        </StackPanel>
+
+                    </Grid>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+    </Grid>
+
+</Window>
