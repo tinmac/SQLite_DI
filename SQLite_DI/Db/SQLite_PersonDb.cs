@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using SQLite_DI.Model;
 using System;
 using System.Collections.Generic;
@@ -12,55 +13,46 @@ namespace SQLite_DI.Db
 {
     public class PersonSQLiteDb : IPersonDb
     {
+        private IServiceProvider _serviceProvider;
         private SQLite_DbContext db;
 
-        public PersonSQLiteDb()
+        public PersonSQLiteDb(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
+
+            var scope = _serviceProvider.CreateScope();
+            db = scope.ServiceProvider.GetRequiredService<SQLite_DbContext>();
         }
 
-        public Task<List<Person>> GetAll()
+        public List<Person> GetAll()
         {
-            using (db = new SQLite_DbContext())
-            {
-                return db.People.AsNoTracking().ToListAsync();
-            }
+            return db.People.ToList();
         }
 
-        public Task<List<Person>> GetAllWhere(Expression<Func<Person, bool>> predicate)
+        public List<Person> GetAllWhere(Expression<Func<Person, bool>> predicate)
         {
-            using (db = new SQLite_DbContext())
-            {
-                return db.People.Where(predicate).ToListAsync();
-            }
+            return db.People.Where(predicate).ToList();
         }
 
-        public Task<Person> GetSingleWhere(Expression<Func<Person, bool>> predicate)
+        public Person GetSingleWhere(Expression<Func<Person, bool>> predicate)
         {
-            using (db = new SQLite_DbContext())
-            {
-                return Task.FromResult(db.People.AsNoTracking().SingleOrDefault(predicate));
-            }
+            return db.People.SingleOrDefault(predicate);
         }
 
-        public Task<bool> AnyWhere(Expression<Func<Person, bool>> predicate)
+        public bool AnyWhere(Expression<Func<Person, bool>> predicate)
         {
-            using (db = new SQLite_DbContext())
-            {
-                return Task.FromResult(db.People.AsNoTracking().Any(predicate));
-            }
+            return db.People.Any(predicate);
         }
 
 
-        public async Task<Person> Insert(Person item)
+        public Person Insert(Person item)
         {
             try
             {
-                using (db = new SQLite_DbContext())
-                {
-                    await db.People.AddAsync(item);
-                    await db.SaveChangesAsync();
-                    return item;
-                }
+                db.People.Add(item);
+                db.SaveChanges();
+
+                return item;
             }
             catch (Exception ex)
             {
@@ -70,17 +62,14 @@ namespace SQLite_DI.Db
         }
 
 
-        public async Task<Person> Update(Person item)
+        public Person Update(Person item)
         {
             try
             {
-                using (db = new SQLite_DbContext())
-                {
-                    db.People.Update(item);
-                    await db.SaveChangesAsync();
+                db.People.Update(item);
+                db.SaveChanges();
 
-                    return item;
-                }
+                return item;
             }
             catch (Exception ex)
             {
@@ -90,17 +79,14 @@ namespace SQLite_DI.Db
         }
 
 
-        public async Task<Person> Delete(Person Person)
+        public Person Delete(Person Person)
         {
             try
             {
-                using (db = new SQLite_DbContext())
-                {
-                    var toDel = db.People.Find(Person.Id);
-                    db.People.Remove(toDel);
-                    await db.SaveChangesAsync();
-                    return toDel;
-                }
+                var toDel = db.People.Find(Person.Id);
+                db.People.Remove(toDel);
+                db.SaveChanges();
+                return toDel;
             }
             catch (Exception ex)
             {

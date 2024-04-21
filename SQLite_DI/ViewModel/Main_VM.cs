@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,12 @@ namespace SQLite_DI.ViewModel
     {
         private readonly IPersonDb _PersonDb;
 
+        Random rnd;
+
+
+
+        public Microsoft.UI.Dispatching.DispatcherQueue TheDispatcher { get; set; }
+
 
         private ObservableCollection<Person> peopleOC = new ObservableCollection<Person>();
         public ObservableCollection<Person> PeopleOC
@@ -25,7 +32,7 @@ namespace SQLite_DI.ViewModel
         }
 
         private string personCount;
-        public string PersonCount
+        public string Message
         {
             get => personCount;
             set => Set(ref personCount, value);
@@ -40,33 +47,103 @@ namespace SQLite_DI.ViewModel
         }
 
 
-        public async Task LoadDb()
+        public void LoadDb()
         {
             Debug.WriteLine($"Loading Db...");
 
-            var people = await _PersonDb.GetAll();
+            var people = _PersonDb.GetAll();
 
             PeopleOC = new ObservableCollection<Person>(people);
 
-            PersonCount = $"{PeopleOC.Count} records";
+            Message = $"{PeopleOC.Count} records";
         }
 
-        public async Task SeedDb()
+        public void SeedDb(int seed_count)
         {
-            Debug.WriteLine($"Seeding Db...");
+            Message = ($"Seeding {seed_count} records...");
 
-            for (int i = 0; i < 10; i++)
+            Task.Run(async() =>
             {
-                Random rnd = new Random();
+                for (int i = 0; i < seed_count; i++)
+                {
+                    rnd = new Random();
+                    var first = GenerateName(rnd.Next(3, 8));
+                    var last = GenerateName(rnd.Next(3, 10));
+                    int age = rnd.Next(18, 75);
 
-                var first = GenerateName(rnd.Next(3, 8));
-                var last = GenerateName(rnd.Next(3, 10));               
-                int age = rnd.Next(18, 75);
+                    var toAdd = new Person { FirstName = first, LastName = last, Age = age };
 
-                await _PersonDb.Insert(new Person { FirstName = first, LastName = last, Age = age });
+                    _PersonDb.Insert(toAdd);
+
+                    TheDispatcher.TryEnqueue(() =>
+                    {
+                        PeopleOC.Insert(0,toAdd);
+                        Message = $"{PeopleOC.Count} records";
+                    });
+
+                    if(seed_count < 101)
+                        await Task.Delay(1); // slow down the loop to show the ui updating
+                }
+            });
+
+        }
+
+        public void Update()
+        {
+            rnd = new Random();
+
+            foreach (var person in PeopleOC)
+            {
+                int new_age = rnd.Next(18, 75);
+               
+                //Debug.WriteLine($"Age   old {person.Age}  new {new_age}");
+                
+                person.Age = new_age;
+
+                _PersonDb.Update(person);
             }
         }
 
+
+        public void DeleteAll()
+        {
+            Message = $"Deleting all records in Db...";
+
+            Task.Delay(10);
+
+            foreach (var person in PeopleOC)
+            {
+                // PeopleOC.Remove(person);
+                _PersonDb.Delete(person);
+            }
+
+            PeopleOC.Clear();
+
+            Message = $"{PeopleOC.Count} records";
+        }
+
+        public void Delete10()
+        {
+            Message = $"Deleting 10 records in Db...";
+
+            int from = 9;
+            if (PeopleOC.Count < 9)
+                from = PeopleOC.Count - 1;
+
+            for (int i = from; i >= 0; i--)
+            {
+                var toDel = PeopleOC[i];
+                _PersonDb.Delete(toDel);
+                PeopleOC.RemoveAt(i);
+            }
+
+            Message = $"{PeopleOC.Count} records";
+        }
+
+
+
+
+        // HELPERS
         public static string GenerateName(int len)
         {
             Random r = new Random();

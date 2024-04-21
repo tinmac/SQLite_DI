@@ -15,11 +15,12 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinUIEx;
 
 
 namespace SQLite_DI
 {
-    public sealed partial class MainWindow : Window
+    public sealed partial class MainWindow : WindowEx
     {
         public Main_VM ViewModel { get; }
 
@@ -28,20 +29,52 @@ namespace SQLite_DI
             this.InitializeComponent();
 
             ViewModel = Ioc.Default.GetRequiredService<Main_VM>();
+            ViewModel.TheDispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+
+            // Set the PersistenceId to save the window size & position in LocalSettings
+            PersistenceId = "MainWin";
         }
 
-        private async void SeedDb_Click(object sender, RoutedEventArgs e)
+        private void Grid_Main_Loaded(object sender, RoutedEventArgs e)
         {
-            await ViewModel.SeedDb();
-
-            await ViewModel.LoadDb();
+            ViewModel.LoadDb();
         }
 
-        private async void Grid_Main_Loaded(object sender, RoutedEventArgs e)
+
+        // Seed
+        private void SeedDb_Click(object sender, RoutedEventArgs e)
         {
-            await ViewModel.SeedDb();
-
-            await ViewModel.LoadDb();
+            ViewModel.SeedDb(10);
         }
+
+        private void Seed100_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SeedDb(100);
+        }
+
+        private void Seed1000_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SeedDb(1000);
+        }
+
+
+        // Update
+        private void Btn_update_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Update();
+        }
+
+
+        // Delete
+        private void Btn_delete_all_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DeleteAll();
+        }
+
+        private void Btn_delete_10_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Delete10();
+        }
+
     }
 }

@@ -57,11 +57,9 @@ namespace SQLite_DI
             m_window.Activate();
 
 
-            using (var db = new SQLite_DbContext())
-            {
-                db.Database.EnsureCreated();
-            }
-
+            Debug.WriteLine($"EnsureCreated...");
+            SQLite_DbContext db = ServiceProvider.GetRequiredService<SQLite_DbContext>();
+            db.Database.EnsureCreated();
         }
 
 
@@ -69,15 +67,17 @@ namespace SQLite_DI
         {
             var services = new ServiceCollection();
 
+            services.AddDbContext<SQLite_DbContext>();
+
 
             //services.AddDbContext<SQLite_DbContext>(options => options
-            //    .UseSqlite($"{DbConString}")
-            //    .EnableSensitiveDataLogging(true)
-            //    .EnableThreadSafetyChecks(true)
-            //    .EnableDetailedErrors()
-            //    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
-            //    ServiceLifetime.Transient
-            //); 
+            //      .UseSqlite($"{DbConString}")
+            //      .EnableSensitiveDataLogging(true)
+            //      .EnableThreadSafetyChecks(true)
+            //      .EnableDetailedErrors()
+            //      .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
+            //      ServiceLifetime.Transient
+            //  );
 
 
             services.AddTransient<IPersonDb, PersonSQLiteDb>();

@@ -10,19 +10,19 @@ namespace SQLite_DI.Db
 {
     public interface IPersonDb
     {
-        Task<List<Person>> GetAll();
+        List<Person> GetAll();
 
-        Task<List<Person>> GetAllWhere(Expression<Func<Person, bool>> predicate);
+        List<Person> GetAllWhere(Expression<Func<Person, bool>> predicate);
 
-        Task<Person> GetSingleWhere(Expression<Func<Person, bool>> predicate);
+        Person GetSingleWhere(Expression<Func<Person, bool>> predicate);
 
-        Task<bool> AnyWhere(Expression<Func<Person, bool>> predicate);
+        bool AnyWhere(Expression<Func<Person, bool>> predicate);
 
-        Task<Person> Insert(Person Person);
+        Person Insert(Person Person);
 
-        Task<Person> Update(Person Person);
+        Person Update(Person Person);
 
-        Task<Person> Delete(Person Person);
+        Person Delete(Person Person);
 
     }
 }

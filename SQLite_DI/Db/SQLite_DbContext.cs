@@ -15,10 +15,6 @@ namespace SQLite_DI.Db
         {
         }
 
-        public SQLite_DbContext()
-        {
-        }
-
 
         public DbSet<Person> People { get; set; }
 
@@ -27,11 +23,20 @@ namespace SQLite_DI.Db
         {
             try
             {
-                optionsBuilder.UseSqlite(App.DbConString); 
+                optionsBuilder
+                   .UseSqlite($"{App.DbConString}")
+                   .EnableSensitiveDataLogging(true)
+                   .EnableThreadSafetyChecks(true)
+                   .EnableDetailedErrors()
+                   .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            
+
+                Debug.WriteLine($"OnConfiguring...");
+           
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error: {ex.Message}");
+                Debug.WriteLine($"OnConfiguring Error: {ex.Message}");
             }
 
         }
