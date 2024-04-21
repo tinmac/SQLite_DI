@@ -2,6 +2,7 @@
 using SQLite_DI.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -63,9 +64,9 @@ namespace SQLite_DI.Db
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"Exception {ex}");
                 return null;
             }
-
         }
 
 
@@ -83,6 +84,7 @@ namespace SQLite_DI.Db
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"Exception {ex}");
                 return null;
             }
         }
@@ -102,6 +104,7 @@ namespace SQLite_DI.Db
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"Exception {ex}");
                 return null;
             }
         }

@@ -23,14 +23,10 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace SQLite_DI
 {
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
+
     public partial class App : Application
     {
         private Window m_window;
@@ -55,7 +51,7 @@ namespace SQLite_DI
         }
 
 
-        protected async override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             m_window = new MainWindow();
             m_window.Activate();
@@ -63,10 +59,7 @@ namespace SQLite_DI
 
             using (var db = new SQLite_DbContext())
             {
-                // Note: EnsureCreated calls -> OnConfiguring
-
-                //db.Database.EnsureCreated();
-                await db.Database.EnsureCreatedAsync();
+                db.Database.EnsureCreated();
             }
 
         }
@@ -77,11 +70,14 @@ namespace SQLite_DI
             var services = new ServiceCollection();
 
 
-            services.AddDbContext<SQLite_DbContext>(options => options
-                .UseSqlite($"{DbConString}")
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-                .EnableDetailedErrors()
-            ); // options.UseSqlite()); //options.UseSqlite($"Data Source = { dbFile}"));
+            //services.AddDbContext<SQLite_DbContext>(options => options
+            //    .UseSqlite($"{DbConString}")
+            //    .EnableSensitiveDataLogging(true)
+            //    .EnableThreadSafetyChecks(true)
+            //    .EnableDetailedErrors()
+            //    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
+            //    ServiceLifetime.Transient
+            //); 
 
 
             services.AddTransient<IPersonDb, PersonSQLiteDb>();

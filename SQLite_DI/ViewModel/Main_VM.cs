@@ -32,10 +32,13 @@ namespace SQLite_DI.ViewModel
         }
 
 
+
+        // Constructor with IPersonDb injected
         public Main_VM(IPersonDb personDb)
         {
             _PersonDb = personDb;
         }
+
 
         public async Task LoadDb()
         {
