@@ -75,7 +75,7 @@ namespace SQLite_DI
             //      .EnableSensitiveDataLogging(true)
             //      .EnableThreadSafetyChecks(true)
             //      .EnableDetailedErrors()
-            //      .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
+            //      .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll),
             //      ServiceLifetime.Transient
             //  );
 

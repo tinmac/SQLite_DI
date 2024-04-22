@@ -25,11 +25,11 @@ namespace SQLite_DI.Db
             {
                 optionsBuilder
                    .UseSqlite($"{App.DbConString}")
-                   .EnableSensitiveDataLogging(true)
-                   .EnableThreadSafetyChecks(true)
-                   .EnableDetailedErrors()
+                   //.EnableSensitiveDataLogging(true)
+                   //.EnableThreadSafetyChecks(true)
+                   //.EnableDetailedErrors()
                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            
+
 
                 Debug.WriteLine($"OnConfiguring...");
            
