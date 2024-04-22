@@ -78,25 +78,25 @@ namespace SQLite_DI.ViewModel
 
                     people.Add(toAdd);
 
-                    //TheDispatcher.TryEnqueue(() =>
-                    //{
-                    //    PeopleOC.Insert(0,toAdd);
-                    //    Message = $"{PeopleOC.Count} records";
-                    //});
+                    TheDispatcher.TryEnqueue(() =>
+                    {
+                        PeopleOC.Insert(0, toAdd);
+                        Message = $"{PeopleOC.Count} records";
+                    });
 
                     //if(seed_count < 101)
                     //    await Task.Delay(1); // slow down the loop to show the ui updating
                 }
 
-                TheDispatcher.TryEnqueue(() =>
-                {
-                    foreach (var person in people)
-                    {
-                        //PeopleOC.Add(person);
-                        PeopleOC.Insert(0, person);
-                    }
-                    Message = $"{PeopleOC.Count} records";
-                });
+                //TheDispatcher.TryEnqueue(() =>
+                //{
+                //    foreach (var person in people)
+                //    {
+                //        //PeopleOC.Add(person);
+                //        PeopleOC.Insert(0, person);
+                //    }
+                //    Message = $"{PeopleOC.Count} records";
+                //});
             });
 
         }
