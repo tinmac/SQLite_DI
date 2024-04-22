@@ -15,9 +15,9 @@ namespace SQLite_DI.ViewModel
 {
     public class Main_VM : BaseINPC
     {
-        private readonly IPersonDb _PersonDb;
-
         Random rnd;
+          
+        private readonly IGenericRepository<Person> _PersonDb;
 
 
 
@@ -31,17 +31,16 @@ namespace SQLite_DI.ViewModel
             set => Set(ref peopleOC, value);
         }
 
-        private string personCount;
+        private string _Message;
         public string Message
         {
-            get => personCount;
-            set => Set(ref personCount, value);
+            get => _Message;
+            set => Set(ref _Message, value);
         }
 
 
 
-        // Constructor with IPersonDb injected
-        public Main_VM(IPersonDb personDb)
+        public Main_VM(IGenericRepository<Person> personDb)
         {
             _PersonDb = personDb;
         }
@@ -57,6 +56,7 @@ namespace SQLite_DI.ViewModel
 
             Message = $"{PeopleOC.Count} records";
         }
+
 
         public void SeedDb(int seed_count)
         {
@@ -87,6 +87,7 @@ namespace SQLite_DI.ViewModel
             });
 
         }
+
 
         public void Update()
         {
@@ -121,6 +122,7 @@ namespace SQLite_DI.ViewModel
 
             Message = $"{PeopleOC.Count} records";
         }
+
 
         public void Delete10()
         {

@@ -39,55 +39,68 @@ namespace SQLite_DI
         {
             this.InitializeComponent();
 
-            var DbPath = ApplicationData.Current.LocalFolder.Path;
+            try
+            {
 
-            Debug.WriteLine($"Db path\n{DbPath}");
+                var DbPath = ApplicationData.Current.LocalFolder.Path;
 
-            DbConString = $"DataSource={DbPath}\\sqlite_di.db";
+                Debug.WriteLine($"Db path\n{DbPath}");
 
-            ServiceProvider = ConfigureServices();
-            Ioc.Default.ConfigureServices(ServiceProvider);
+                DbConString = $"DataSource={DbPath}\\sqlite_di.db";
 
+                ServiceProvider = ConfigureServices();
+                Ioc.Default.ConfigureServices(ServiceProvider);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
 
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window = new MainWindow();
-            m_window.Activate();
+            try
+            {
+                m_window = new MainWindow();
+                m_window.Activate();
 
-
-            Debug.WriteLine($"EnsureCreated...");
-            SQLite_DbContext db = ServiceProvider.GetRequiredService<SQLite_DbContext>();
-            db.Database.EnsureCreated();
+                Debug.WriteLine($"EnsureCreated...");
+                SQLite_DbContext db = ServiceProvider.GetRequiredService<SQLite_DbContext>();
+                db.Database.EnsureCreated();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
 
         private IServiceProvider ConfigureServices()
         {
-            var services = new ServiceCollection();
+            try
+            {
+                var services = new ServiceCollection();
 
-            services.AddDbContext<SQLite_DbContext>();
+                services.AddSingleton<Main_VM>();
 
+                services.AddDbContext<SQLite_DbContext>();
 
-            //services.AddDbContext<SQLite_DbContext>(options => options
-            //      .UseSqlite($"{DbConString}")
-            //      .EnableSensitiveDataLogging(true)
-            //      .EnableThreadSafetyChecks(true)
-            //      .EnableDetailedErrors()
-            //      .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
-            //      ServiceLifetime.Transient
-            //  );
+               // services.AddSingleton<SQLite_DbContext>();
 
 
-            services.AddTransient<IPersonDb, PersonSQLiteDb>();
+                services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-            services.AddSingleton<Main_VM>();
+                var svcs = services.BuildServiceProvider();
 
-            var svcs = services.BuildServiceProvider();
+                return svcs;
 
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
-            return svcs;
         }
 
     }

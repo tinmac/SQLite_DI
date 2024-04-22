@@ -28,11 +28,18 @@ namespace SQLite_DI
         {
             this.InitializeComponent();
 
-            ViewModel = Ioc.Default.GetRequiredService<Main_VM>();
-            ViewModel.TheDispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            try
+            {
+                ViewModel = Ioc.Default.GetRequiredService<Main_VM>();
+                ViewModel.TheDispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
 
-            // Set the PersistenceId to save the window size & position in LocalSettings
-            PersistenceId = "MainWin";
+                PersistenceId = "MainWin";// Set the PersistenceId to save the window size & position in LocalSettings
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         private void Grid_Main_Loaded(object sender, RoutedEventArgs e)
