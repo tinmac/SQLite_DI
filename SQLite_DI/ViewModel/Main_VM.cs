@@ -62,7 +62,7 @@ namespace SQLite_DI.ViewModel
         {
             Message = ($"Seeding {seed_count} records...");
 
-            Task.Run(async () =>
+            Task.Run(() =>
             {
                 List<Person> people = new List<Person>();
                 for (int i = 0; i < seed_count; i++)
