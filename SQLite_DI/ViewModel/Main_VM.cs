@@ -62,8 +62,9 @@ namespace SQLite_DI.ViewModel
         {
             Message = ($"Seeding {seed_count} records...");
 
-            Task.Run(async() =>
+            Task.Run(async () =>
             {
+                List<Person> people = new List<Person>();
                 for (int i = 0; i < seed_count; i++)
                 {
                     rnd = new Random();
@@ -75,33 +76,49 @@ namespace SQLite_DI.ViewModel
 
                     _PersonDb.Insert(toAdd);
 
-                    TheDispatcher.TryEnqueue(() =>
-                    {
-                        PeopleOC.Insert(0,toAdd);
-                        Message = $"{PeopleOC.Count} records";
-                    });
+                    people.Add(toAdd);
 
-                    if(seed_count < 101)
-                        await Task.Delay(1); // slow down the loop to show the ui updating
+                    //TheDispatcher.TryEnqueue(() =>
+                    //{
+                    //    PeopleOC.Insert(0,toAdd);
+                    //    Message = $"{PeopleOC.Count} records";
+                    //});
+
+                    //if(seed_count < 101)
+                    //    await Task.Delay(1); // slow down the loop to show the ui updating
                 }
+
+                TheDispatcher.TryEnqueue(() =>
+                {
+                    foreach (var person in people)
+                    {
+                        //PeopleOC.Add(person);
+                        PeopleOC.Insert(0, person);
+                    }
+                    Message = $"{PeopleOC.Count} records";
+                });
             });
 
         }
 
         public void Update()
         {
+            Message = ($"Updating age of {PeopleOC.Count} records...");
+
             rnd = new Random();
 
             foreach (var person in PeopleOC)
             {
                 int new_age = rnd.Next(18, 75);
-               
+
                 //Debug.WriteLine($"Age   old {person.Age}  new {new_age}");
-                
+
                 person.Age = new_age;
 
                 _PersonDb.Update(person);
             }
+            Message = $"{PeopleOC.Count} records";
+
         }
 
 

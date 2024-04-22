@@ -24,11 +24,11 @@ namespace SQLite_DI.Db
             try
             {
                 optionsBuilder
-                   .UseSqlite($"{App.DbConString}")
+                   .UseSqlite($"{App.DbConString}");
                    //.EnableSensitiveDataLogging(true)
                    //.EnableThreadSafetyChecks(true)
                    //.EnableDetailedErrors()
-                   .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                   //.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
 
                 Debug.WriteLine($"OnConfiguring...");

@@ -67,17 +67,17 @@ namespace SQLite_DI
         {
             var services = new ServiceCollection();
 
-            services.AddDbContext<SQLite_DbContext>();
+            // services.AddDbContext<SQLite_DbContext>();
 
 
-            //services.AddDbContext<SQLite_DbContext>(options => options
-            //      .UseSqlite($"{DbConString}")
-            //      .EnableSensitiveDataLogging(true)
-            //      .EnableThreadSafetyChecks(true)
-            //      .EnableDetailedErrors()
-            //      .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll),
-            //      ServiceLifetime.Transient
-            //  );
+            services.AddDbContext<SQLite_DbContext>(options => options
+                  .UseSqlite($"{DbConString}")
+                  //.EnableSensitiveDataLogging(true)
+                  //.EnableThreadSafetyChecks(true)
+                  //.EnableDetailedErrors()
+                  .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
+                  ServiceLifetime.Transient
+              );
 
 
             services.AddTransient<IPersonDb, PersonSQLiteDb>();

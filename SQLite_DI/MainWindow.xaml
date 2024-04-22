@@ -91,25 +91,12 @@
             ScrollViewer.HorizontalScrollBarVisibility="Auto"
             ScrollViewer.HorizontalScrollMode="Auto">
 
-            <!--<ListView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource DefaultListViewItemStyle}" TargetType="ListViewItem">
-                    <Setter Property="cus_ctrls:LVI_BindingHelper.IsEnabled" Value="IsSelectable" />
-                </Style>
-            </ListView.ItemContainerStyle>-->
-
-            <!--<ListView.ItemContainerStyle>
-                                <Style BasedOn="{StaticResource MyListViewItemRevealStyle_1}" TargetType="ListViewItem">
-                                    <Setter Property="cus_ctrls:LVI_BindingHelper.IsEnabled" Value="IsSelectable" />
-                                </Style>
-                            </ListView.ItemContainerStyle>-->
-
-
             <ListView.ItemTemplate>
                 <DataTemplate>
 
                     <Grid>
                         <StackPanel Orientation="Horizontal">
-
+                           
                             <TextBlock
                                 MinWidth="100"
                                 Margin="0"
